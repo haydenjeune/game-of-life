@@ -1,13 +1,21 @@
 use std::cmp;
+use rand::random;
 
-struct  World {
+struct World {
     size: usize,
     elements: Vec<bool>,
 }
 
 impl World {
     fn new(size: usize) -> World {
-        let elements: Vec<bool> = vec![false; size*size];
+
+        let num_of_elements = size * size;
+
+        let mut elements: Vec<bool> = Vec::with_capacity(num_of_elements);
+        for _ in 0..(num_of_elements) {
+            elements.push(random());
+        }
+
         World {size, elements}
     }
 
@@ -56,12 +64,18 @@ mod tests {
 
     #[test]
     fn new() {
-        let world = World::new(3);
+        let mut world = World::new(3);
 
         assert_eq!(
             world.size,
             3
         );
+
+        for row in 0..3 {
+            for col in 0..3 {
+                world.set(row, col, false).unwrap();
+            }
+        }
 
         assert_eq!(
             world.elements,
@@ -70,26 +84,10 @@ mod tests {
     }
 
     #[test]
-    fn get_valid() {
-        let world = World::new(3);
-        
-        assert_eq!(
-            world.get(1,2),
-            Ok(false)
-        );
-    }
-
-    #[test]
-    fn get_invalid() {
-        let world = World::new(3);
-
-        assert!(world.get(1,3).is_err())
-    }
-
-    #[test]
-    fn set_valid() {
+    fn get_and_set_valid() {
         let mut world = World::new(3);
         
+        // check with true and false to avoid passing from random initialisation
         assert_eq!(
             world.set(1, 2, true),
             Ok(())
@@ -99,6 +97,23 @@ mod tests {
             world.get(1, 2),
             Ok(true)
         );
+
+        assert_eq!(
+            world.set(1, 2, false),
+            Ok(())
+        );
+
+        assert_eq!(
+            world.get(1, 2),
+            Ok(false)
+        );
+    }
+
+    #[test]
+    fn get_invalid() {
+        let world = World::new(3);
+
+        assert!(world.get(1,3).is_err())
     }
 
     #[test]
