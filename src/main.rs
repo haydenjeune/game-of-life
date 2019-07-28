@@ -1,4 +1,5 @@
 use std::process;
+use std::cmp;
 
 struct  World {
     size: usize,
@@ -22,13 +23,28 @@ impl World {
             }
         }
     }
+
+    fn set(&mut self, row: usize, col: usize, value: bool) {
+
+        if cmp::max(row, col) >= self.size {
+            eprintln!("Error: Invalid access attempt in World::get({},{})", row, col);
+            process::exit(1);
+        }
+
+        let idx = self.size * row + col;
+
+        self.elements[idx] = value;
+    }
 }
 
 fn main() {
-    let world = World::new(3);
+    let mut world = World::new(3);
 
     println!("Size: {}", world.size);
     println!("Elements: {:?}", world.elements);
-    println!("First element: {}", world.get(0,0));
+    println!("(0,0) element: {}", world.get(0,0));
 
+    world.set(0,1,true);
+
+    println!("(0,1) element: {}", world.get(0,1));
 }
