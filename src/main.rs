@@ -14,7 +14,7 @@ impl World {
     fn get(&self, row: usize, col: usize) -> Result<bool, &'static str> {
 
         if cmp::max(row, col) >= self.size {
-            return Err("Error: Invalid access attempt in World::set()");
+            return Err("Error: Invalid access attempt in World::get()");
         }
 
         let idx = self.size * row + col;
