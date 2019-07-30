@@ -1,6 +1,26 @@
 use std::cmp;
 use rand::random;
 
+pub struct Config {
+    pub size: usize,
+    pub iterations: u64,
+    pub pause_ms: u64,
+}
+
+impl Config {
+    pub fn new(args: &[String]) -> Result<Config, &'static str> {
+        if args.len() < 3 {
+            return Err("Not enough arguments.")
+        }
+
+        let size = args[1].parse::<usize>().unwrap();
+        let iterations = args[2].parse::<u64>().unwrap();
+        let pause_ms = args[3].parse::<u64>().unwrap();
+
+        Ok(Config { size, iterations, pause_ms })
+    }
+}
+
 #[derive(Clone)]
 pub struct World {
     pub size: usize,
@@ -66,7 +86,11 @@ impl World {
     pub fn display(&self) {
         for row in 0..self.size {
             for col in 0..self.size {
-                print!("{}  ", self.get(row, col).unwrap() as u8);
+                let mut print_str = "  ";
+                if self.get(row, col).unwrap() {
+                    print_str = "██";
+                }
+                print!("{}",  print_str);
             }
             print!("\n");
         }
