@@ -111,6 +111,10 @@ impl World {
         }
         Ok(())
     }
+
+    pub fn is_empty(&self) -> bool {
+        self.elements.contains(&true) == false
+    }
 }
 
 
@@ -120,7 +124,7 @@ mod tests {
 
     #[test]
     fn new() {
-        let mut world = World::new(3);
+        let world = World::new(3);
 
         assert_eq!(
             world.size,
